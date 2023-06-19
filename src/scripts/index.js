@@ -5,10 +5,6 @@ import { getEvents } from '/src/scripts/services/events.js'
 import { user } from '/src/scripts/objects/user.js'
 import { screen } from '/src/scripts/objects/screen.js'
 
-let teste = await fetch('https://api.github.com/users/cadudias/events{/privacy}')
-
-console.log(teste)
-
 document.getElementById('btn-search').addEventListener('click', () => {
     const userName = document.getElementById('input-search').value
     if(validateEmptyInput(userName)) return

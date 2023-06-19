@@ -12,17 +12,39 @@ const screen = {
                        </div>`
 
         let eventsItens = ''
-        user.events.forEach(even => eventsItens += `<li><a href="${even.events_url}" target="_blank">${even.name}</a></li>`)
 
+        const filteredEvents = user.events.filter(even => even.type === "CreateEvent" || even.type === "PushEvent");
+        const slicedEvents = filteredEvents.slice(0, 10);
+
+        slicedEvents.forEach(even => {
+            const repoName = even.repo ? even.repo.name : '';
+            const commitMessage = even.payload && even.payload.commits && even.payload.commits.length > 0 ? even.payload.commits[0].message : '';
+                    
+            eventsItens += `<li><h4>${repoName}</h4><p>-${commitMessage}</p></li>`;
+        });
+        
         if(user.events.length > 0){
-            this.userProfile.innerHTML += `<div class="repositories section">
+            this.userProfile.innerHTML += `<div class="events section">
                 <h2>Eventos</h2>
-                <ul>${eventsItens}</ul>
+                <ul class="event-list">${eventsItens}</ul>
             </div>`
         }
 
         let repositoriesItens = ''
-        user.repositories.forEach(repo => repositoriesItens += `<li><a href="${repo.html_url}" target="_blank">${repo.name}</a></li>`)
+        user.repositories.forEach(repo => repositoriesItens += `
+            <li class="repository-list">
+                <a href="${repo.html_url}" target="_blank">
+                    <h3>${repo.name}</h3>
+                    <div>
+                        <ul class="repository-infos">
+                            <li>🍴 ${repo.forks_count}</li>
+                            <li>⭐ ${repo.stargazers_count}</li>
+                            <li>👀 ${repo.watchers_count}</li>
+                            <li>👨‍💻 ${repo.language}</li>
+                        </ul>
+                    </div>
+                </a>
+            </li>`);
 
         if(user.repositories.length > 0){
             this.userProfile.innerHTML += `<div class="repositories section">

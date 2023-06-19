@@ -15,11 +15,25 @@ const user = {
         this.followers = gitHubUser.followers
         this.following = gitHubUser.following
     },
-    setEvents(events){
-        this.events = events.events_url
+    setEvents(event){
+        this.events = event.map(even => {
+            return {
+                ...even,
+                name: this.repo ? this.repo.name : null,
+                commit: this.payload && this.payload.commits && this.payload.commits.length > 0 ? this.payload.commits[0].message : null,
+            };
+        }).filter(event => event.commit !== undefined);
     },
     setRepositories(repositories){
-        this.repositories = repositories
+        this.repositories = repositories.map(repo => {
+            return {
+                ...repo,
+                forks: this.forks,
+                stars: this.stargazers_count,
+                watchers: this.watchers,
+                language: repo.language || 'Não especificado'
+            }
+        })
     }
 }
 
